@@ -19,9 +19,8 @@ define(function(){
             return Object.prototype.toString.call(any).match(/^\[object\s+([^\]]+)\]$/i)[1].toLowerCase();
         },
         each: function(any, fn, ctx){
-            var len = any.length || 0;
-            while(len--){
-                if( (ctx ? fn.call(ctx, any[len], len) : fn(any[len], len) ) === false){
+            for(var k in any){
+                if(any.hasOwnProperty(k) && (ctx ? fn.call(ctx, k, any[k]) : fn(k, any[k]) ) === false) {
                     break;
                 }
             }
@@ -30,6 +29,7 @@ define(function(){
             for(var k in second){
                 second.hasOwnProperty(k) && (first[k]=second[k]);
             }
+            return first;
         },
         $: function(any){
             return this.type(any) === 'string' ? document.getElementById(any) : any;
@@ -40,8 +40,8 @@ define(function(){
 
             this.type(tag) !== 'array' && (tag=[tag]);
             for(var i= 0, len=tag.length; i<len;){
-                tmp = ele.getElementsByTagName(tag[i]);
-                tmp && all.concat(Array.prototype.slice.call(tmp, 0));
+                tmp = ele.getElementsByTagName(tag[i++]);
+                tmp.length>0 && ( all=all.concat( Array.prototype.slice.call(tmp, 0) ) );
             }
             return all;
         },
@@ -50,7 +50,7 @@ define(function(){
                 len = arr.length;
 
             while(len--){
-                fn(len, arr[len]) && ret.push(arr[len]);
+                fn(arr[len], len) && ret.push(arr[len]);
             }
             return ret;
         },
@@ -133,7 +133,7 @@ define(function(){
             return (/^[0-9]+$/).test(value) ? true : 'NUM_ONLY';
         },
         lengthFixed: function(value, opt){
-            return value.length===opt ? true : 'LENGTH_FIXED';
+            return value.length===+opt ? true : 'LENGTH_FIXED';
         },
         cnCharacterOnly: function(value){
             return (/^[\u4E00-\u9FA5]+$/).test(value) ?  true : 'CN_CHARACTER_ONLY';
@@ -320,10 +320,8 @@ define(function(){
 
             _utils.each(_utils.arrayFilter(fields, function(v){
                 return !! _utils.getDataset(v, nameAttr);
-            }), function(ele, idx){
-                    var validatorName = _utils.getDataset(ele, nameAttr);
-
-                    validatorName = validatorName.split(',');
+            }), function(idx, ele){
+                    var validatorName = _utils.getDataset(ele, nameAttr).split(',');
 
                     _utils.each(_utils.getDataset(ele, nameAttr).split(','), function(idx, item){
                         var code = me.applyValidator(item, _utils.trim(_utils.$(ele).value), _utils.getDataset(ele, valueAttr));
