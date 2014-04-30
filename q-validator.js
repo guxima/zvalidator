@@ -1,6 +1,7 @@
 /**
  * 通用的表单验证类库
- * User: Todd
+ * version: 1.0
+ * User: guxima
  * Date: 14-4-26
  * Time: 下午10:25
  */
