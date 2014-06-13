@@ -3,7 +3,7 @@
  <head>
   <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
   <title> q-validator 应用实例 </title>
-  <meta name="Description" content="q-validator的应用实例">
+  <meta name="Description" content="z-validator的应用实例">
  </head>
 
  <body>
@@ -13,10 +13,11 @@
 			<li><label>年龄：</label><input type="number" name="age" data-validator="numOnly"/></li>
 			<li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="cellphoneNo"/></li>
 			<li><label>身份证：</label><input type="text" name="idcard" data-validator="IDCardNo"/></li>
-			<li><label>爱好：</label><select name="hobit" data-validator="lengthFixed" data-validatorvalue="2">
-				<option>选择一个爱好</option>
+			<li><label>选择一个爱好：</label><select name="hobit" data-validator="lengthFixed" data-validatorvalue="2">
+				<option>无</option>
 				<option>吃饭</option>
 				<option>睡觉</option>
+				<option>打豆豆</option>
 			</select></li>
 			<li><input type="submit" value="submit"/> </li>
 		</ul>

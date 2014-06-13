@@ -1,9 +1,8 @@
 /**
  * 通用的表单验证类库
- * version: 1.0
- * User: guxima
- * Date: 14-4-26
- * Time: 下午10:25
+ * version: 1.1
+ * User: guxima@gmail.com
+ * Date: 2014/6/11
  */
 
 define(function(){
