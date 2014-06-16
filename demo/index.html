@@ -9,8 +9,8 @@
  <body>
     <form id="regInfo" onsubmit="return false">
 		<ul>
-			<li><label>姓名：</label><input type="text" name="name" data-validator="cnCharacterOnly,lengthLimit" data-validatorvalue="2,10"/></li>
-			<li><label>年龄：</label><input type="number" name="age" data-validator="numOnly"/></li>
+			<li><label>姓名：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
+			<!--li><label>年龄：</label><input type="number" name="age" data-validator="numOnly"/></li>
 			<li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="cellphoneNo"/></li>
 			<li><label>身份证：</label><input type="text" name="idcard" data-validator="IDCardNo"/></li>
 			<li><label>选择一个爱好：</label><select name="hobit" data-validator="lengthFixed" data-validatorvalue="2">
@@ -18,7 +18,7 @@
 				<option>吃饭</option>
 				<option>睡觉</option>
 				<option>打豆豆</option>
-			</select></li>
+			</select></li-->
 			<li><input type="submit" value="submit"/> </li>
 		</ul>
     </form>

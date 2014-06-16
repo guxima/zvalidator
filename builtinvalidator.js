@@ -106,14 +106,14 @@ define(['utils'], function(utils){
         cnCharacterOnly: function(value){
             return (/^[\u4E00-\u9FA5]+$/).test(value) ?  true : 'CN_CHARACTER_ONLY';
         },
-        lengthLimit: function(value, opt){debugger
+        lengthLimit: function(value, opt){
 			var ret = true;
 
             if(! utils.isEmpty(value) && utils.isArray(opt) && opt.length>0){
                 if(! utils.isUndefined(opt[0])){
                     ret = value.length>=opt[0] ? true : 'LENGTH_LIMIT_MIN';
                 }
-                if(! utils.isUndefined(opt[1])){
+                if(ret===true && ! utils.isUndefined(opt[1])){
                     ret = value.length<=opt[1] ? true : 'LENGTH_LIMIT_MAX';
                 }
             }else{

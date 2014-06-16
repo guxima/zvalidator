@@ -45,8 +45,8 @@ define(['errorconf/' + detectedLang], function(errConf){
 		//根据错误码返回错误信息，若无返回默认错误信息，并提示用户修改
 		getErrMsg: function (errCode){
 			errCode = errCode.toUpperCase();
-
-			return errorMsg[this.guid][errCode] || errConf[errCode] || errConf['UNKNOWN'];
+			//不能直接取对象errorMsg[this.guid]的errCode属性，该对象可能不存在！
+			return (errorMsg[this.guid] && errorMsg[this.guid][errCode]) || errConf[errCode];
 		}
     };
 });

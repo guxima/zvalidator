@@ -69,23 +69,38 @@ define(['utils', 'builtinvalidator', 'errorSet'], function(utils, builtinValidat
                 validity = true,
                 me = this,
                 nameAttr = 'validator',
-                valueAttr = 'validatorvalue',
                 fields = utils.getChildByTagName(selector, ['input', 'select', 'textarea']);
 
             utils.each(utils.arrayFilter(fields, function(v){
                 return !! utils.getDataset(v, nameAttr);
             }), function(idx, ele){
-                    var validatorName = utils.getDataset(ele, nameAttr).split(',');
+                    var validatorMap = {},
+						dataset = utils.getDataset(ele, nameAttr);
 
-                    utils.each(utils.getDataset(ele, nameAttr).split(','), function(idx, item){
-                        var code = me.applyValidator(item, utils.trim(utils.$(ele).value), utils.getDataset(ele, valueAttr));
+					try{
+						validatorMap = new Function('return ' + dataset)();
+					}
+					catch (e){
+						throw('invalid data-validator values => ' + dataset);
+					}
+
+                    utils.each(validatorMap, function(idx, item){
+						var validatorName = item,
+							validatorOpt;
+
+						if(utils.isArray(item)){
+							validatorName = item[0];
+							validatorOpt = item.slice(1);
+						}
+
+                        var code = me.applyValidator(validatorName, utils.trim(utils.$(ele).value), validatorOpt);
 
                         if(code && code!==true){
                             code = code.toUpperCase();//统一大写输出
                             validity = {
                                 code: code,
-                                msg: me.errorSet[code] || me.errorSet[code.slice(code.indexOf('_')+1)] || '',
-                                validatorName: item,
+                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)) || me.errorSet.getErrMsg('UNKNOWN'),
+                                validatorName: validatorName,
                                 invalidElement: ele//保存未通过验证的元素，提供debug信息
                             };
 

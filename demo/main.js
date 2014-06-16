@@ -5,7 +5,7 @@ requirejs.config({
     }
 });
 
-require(['q-validator'], function(qv){
+require(['zvalidator'], function(qv){
     var form = document.getElementById('regInfo');
     form.addEventListener('submit', function(e){
         var isValid = qv.create().traverseContainer('regInfo');
@@ -27,17 +27,4 @@ require(['q-validator'], function(qv){
         }
     },false);
 
-});
-
-require(['zvalidator'], function(zvalidator){
-	console.log(zvalidator, zvalidator.create({
-		userNameValidator: {
-			deps: [['lengthLimit', [5, 7]]],
-			check: function(value){
-				if(! /^[a-z\u4E00-\u9FA5]+$/i.test(value)){
-					return 'NO_SPECIAL_CHAR';
-				}
-			}
-		}
-	}).applyValidator('userNameValidator', '你好你好你好你好你好好'))
 });
