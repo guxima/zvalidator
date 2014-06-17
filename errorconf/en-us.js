@@ -1,12 +1,12 @@
 /**
- * Desc: 错误提示配置文件
+ * Desc: 英文（美语）的错误提示配置文件，此文件仅作示例，使用前请修改
  * User: guxima@gmail.com
  * Date: 2014/6/12
  */
 'use strict';
 define(function(){
 	return {
-		UNKNOWN: 'unknown error',
+		UNKNOWN: '未知错误',
 		NOT_NULL: '不能为空',
         CN_CHARACTER_ONLY: '只能为汉字',
         NUM_ONLY: '只能为数字',

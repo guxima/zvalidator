@@ -1,14 +1,13 @@
 requirejs.config({
     baseUrl: '../',
     paths: {
-      'jquery': 'lib/jquery-1.11.0.min.js'
+      'jquery': 'demo/lib/jquery-1.11.0.min'
     }
 });
 
-require(['zvalidator'], function(qv){
-    var form = document.getElementById('regInfo');
-    form.addEventListener('submit', function(e){
-        var isValid = qv.create().traverseContainer('regInfo');
+require(['zvalidator', 'jquery'], function(zv){
+    $('#regInfo').on('submit', function(e){
+        var isValid = zv.create().traverseContainer('regInfo');
         console.log(isValid);
         /**
          * traverseContainer()返回验证结果
@@ -24,7 +23,9 @@ require(['zvalidator'], function(qv){
         if(isValid !== true){
             isValid.invalidElement.focus();
             alert(isValid.msg)
-        }
-    },false);
+        }else{
+			alert('good')
+		}
+    });
 
 });

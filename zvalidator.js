@@ -4,7 +4,10 @@
  * Date: 2014/6/12
  */
 'use strict';
-define(['utils', 'builtinvalidator', 'errorSet'], function(utils, builtinValidator, ErrorSetFactory){
+
+var detectedLang = typeof window !== 'undefined' ? (navigator.language||navigator.userLanguage).toLowerCase() : 'zh-cn';
+
+define(['utils', 'builtinvalidator', 'errorSet', 'errorconf/' + detectedLang], function(utils, builtinValidator, ErrorSetFactory, errConf){
 	var validatorMethodFactory = builtinValidator.factory,
 		defaultValidator = utils.extend(builtinValidator.basic, builtinValidator.advance);
 
@@ -24,7 +27,7 @@ define(['utils', 'builtinvalidator', 'errorSet'], function(utils, builtinValidat
             var anInstance = new FormValidator(),
                 validator = anInstance.validator||(anInstance.validator={});
 
-			anInstance.errorSet = ErrorSetFactory.create();
+			anInstance.errorSet = ErrorSetFactory.create(errConf);
             for(var k in customValidator){
                 if(customValidator.hasOwnProperty(k)){
 					var vm = validatorMethodFactory.create();
@@ -54,7 +57,12 @@ define(['utils', 'builtinvalidator', 'errorSet'], function(utils, builtinValidat
             var code = true,
                 validator = this.validator[validatorName] || defaultValidator[validatorName];
 
-                code = validator ? validator.call(this, value, opt) : 'UNKOWN';
+                if(validator){
+					code = validator.call(this, value, opt);
+				}else{
+					console.log('invalid validator name => ' + validatorName);
+					code = 'UNKNOWN';
+				}
 
             return code;
         },
@@ -84,11 +92,15 @@ define(['utils', 'builtinvalidator', 'errorSet'], function(utils, builtinValidat
 						throw('invalid data-validator values => ' + dataset);
 					}
 
+					//validatorMap支持两种形式：[validatora, [validatorb, param1, param2...]] or {validatora:'', validatorb:[param1, param2]}
                     utils.each(validatorMap, function(idx, item){
 						var validatorName = item,
 							validatorOpt;
 
-						if(utils.isArray(item)){
+						if(utils.isObject(validatorMap)){
+							validatorName = idx;
+							validatorOpt = item;
+						}else if(utils.isArray(item)){
 							validatorName = item[0];
 							validatorOpt = item.slice(1);
 						}
@@ -99,7 +111,7 @@ define(['utils', 'builtinvalidator', 'errorSet'], function(utils, builtinValidat
                             code = code.toUpperCase();//统一大写输出
                             validity = {
                                 code: code,
-                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)) || me.errorSet.getErrMsg('UNKNOWN'),
+                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)),
                                 validatorName: validatorName,
                                 invalidElement: ele//保存未通过验证的元素，提供debug信息
                             };

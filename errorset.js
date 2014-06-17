@@ -5,9 +5,7 @@
  */
 'use strict';
 
-var detectedLang = typeof window !== 'undefined' ? navigator.language.toLowerCase() : 'zh-cn';
-
-define(['errorconf/' + detectedLang], function(errConf){
+define(function(){
 	//用errorSet对象的guid为键值存储自定义错误配置
 	var errorMsg = {};
 
@@ -21,12 +19,8 @@ define(['errorconf/' + detectedLang], function(errConf){
 
             var anErrorSet = new ErrorSet();
 
-            for(var k in opt){
-                if(opt.hasOwnProperty(k)){
-                    anErrorSet[k] = opt[k];
-                }
-            }
 			anErrorSet.guid = +new Date;
+			anErrorSet.setErrMsg(opt);
 
             return anErrorSet;
         },
@@ -46,7 +40,7 @@ define(['errorconf/' + detectedLang], function(errConf){
 		getErrMsg: function (errCode){
 			errCode = errCode.toUpperCase();
 			//不能直接取对象errorMsg[this.guid]的errCode属性，该对象可能不存在！
-			return (errorMsg[this.guid] && errorMsg[this.guid][errCode]) || errConf[errCode];
+			return (errorMsg[this.guid] && errorMsg[this.guid][errCode]);
 		}
     };
 });

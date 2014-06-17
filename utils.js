@@ -35,7 +35,11 @@ define(function(){
             this.type(tag) !== 'array' && (tag=[tag]);
             for(var i= 0, len=tag.length; i<len;){
                 tmp = ele.getElementsByTagName(tag[i++]);
-                tmp.length>0 && ( all=all.concat( Array.prototype.slice.call(tmp, 0) ) );
+                if(tmp.length>0){
+					for (var k=0, ken=tmp.length; k<ken; k++){
+						all.push(tmp[k]);
+					}
+				}
             }
             return all;
         },
