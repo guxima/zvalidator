@@ -1,5 +1,6 @@
 /**
- * Desc: 验证器统一的对外使用接口
+ * Desc: 通用的表单验证类库
+ * version: 2.0
  * User: guxima@gmail.com
  * Date: 2014/6/12
  */
