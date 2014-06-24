@@ -8,7 +8,6 @@ requirejs.config({
 require(['zvalidator', 'jquery'], function(zv){
     $('#regInfo').on('submit', function(e){
         var isValid = zv.create().traverseContainer('regInfo');
-        console.log(isValid);
         /**
          * traverseContainer()返回验证结果
          * 验证通过时返回 true
