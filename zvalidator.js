@@ -8,7 +8,7 @@
 
 var detectedLang = typeof window !== 'undefined' ? (navigator.language||navigator.userLanguage).toLowerCase() : 'zh-cn';
 
-define(['utils', 'builtinvalidator', 'errorSet', 'errorconf/' + detectedLang], function(utils, builtinValidator, ErrorSetFactory, errConf){
+define(['utils', 'builtinvalidator/builtinvalidator', 'errorSet', 'errorconf/' + detectedLang], function(utils, builtinValidator, ErrorSetFactory, errConf){
 	var validatorMethodFactory = builtinValidator.factory,
 		defaultValidator = utils.extend(builtinValidator.basic, builtinValidator.advance);
 
