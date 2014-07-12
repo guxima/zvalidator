@@ -159,7 +159,7 @@ define(['utils'], function(utils){
             check: function(value){
 				var ret = true;
 
-                if (! (/^\d{17}[\dx]$/g).test(value)){
+                if (! (/^\d{17}[\dX]$/ig).test(value)){
                     ret = 'IDCARDNO_UNEXPECT_CHAR';
                 }else{
                     //按照ISO7064:1983.MOD 11-2校验码计算出来的校验码
@@ -176,7 +176,7 @@ define(['utils'], function(utils){
                         sum='X';
                     }
 
-                    if(sum !== +value.slice(-1)){
+                    if(sum != value.slice(-1).toUpperCase()){
                         ret = 'IDCARDNO_INVALID';
                     }
                 }
