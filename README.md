@@ -30,19 +30,21 @@ data-validator：指定验证器，和对应的验证器参数
 html代码示例：
 
     <form id="regInfo" onsubmit="return false">
-        <ul>
-            <li><label>姓名：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
-            <li><label>年龄5-10：</label><input type="number" name="age" data-validator="{'rangeLimit':[5,10]}"/></li>
-            <li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="['cellphoneNo']"/></li>
-            <li><label>身份证：</label><input type="text" name="idcard" data-validator="['IDCardNo']"/></li>
-            <li><label for="hobit">选择一个爱好：</label><select id="hobit" name="hobit" data-validator="{'lengthFixed':2}">
-                <option value="无">无</option>
-                <option value="吃饭">吃饭</option>
-                <option value="睡觉">睡觉</option>
-                <option value="打豆豆">打豆豆</option>
-            </select></li>
-            <li><input type="submit" value="submit"/></li>
-        </ul>
+    	<ul>
+    		<li><label>姓名（2-10个汉字）：</label><input type="text" name="name"
+    									 data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
+    		<li><label>年龄（5-10）：</label><input type="number" name="age" data-validator="{'rangeLimit':[5,10]}"/></li>
+    		<li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo"
+    														data-validator="['cellphoneNo']"/></li>
+    		<li><label>身份证：</label><input type="text" name="idcard" data-validator="['IDCardNo']"/></li>
+    		<li><label>选择一个爱好（两字）：</label><select name="hobit" data-validator="{'lengthFixed':2}">
+    			<option value="无">无</option>
+    			<option value="吃饭">吃饭</option>
+    			<option value="睡觉">睡觉</option>
+    			<option value="打豆豆">打豆豆</option>
+    		</select></li>
+    		<li><input type="submit" value="submit"/></li>
+    	</ul>
     </form>
 
 
