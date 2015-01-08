@@ -6,14 +6,14 @@ var advancedValidator = {
     rangeLimit: {
         deps: ['numOnly'],
         check: function(value, opt){
-            if(Utils.isArray(opt) && opt.length===2){
+            if(utils.isArray(opt) && opt.length===2){
                 var ret = true;
 
                 value = parseInt(value, 10) || 0;
-                if(Utils.type(opt[0]) !== 'undefined'){
+                if(utils.type(opt[0]) !== 'undefined'){
                     ret = value>=parseInt(opt[0], 10) ? true : 'RANGE_LIMIT_MIN';
                 }
-                if(ret===true && Utils.type(opt[1]) !== 'undefined'){
+                if(ret===true && utils.type(opt[1]) !== 'undefined'){
                     ret = value<=parseInt(opt[1], 10) ? true : 'RANGE_LIMIT_MAX';
                 }
 

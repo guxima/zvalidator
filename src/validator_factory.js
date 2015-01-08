@@ -4,13 +4,11 @@
  * User: guxima@gmail.com
  * Date: 2015/1/8
  */
-'use strict';
 
-var detectedLang = typeof window !== 'undefined' ? (navigator.language||navigator.userLanguage).toLowerCase() : 'zh-cn';
-
-define(['utils', '../builtinvalidator/builtinvalidator', 'errorSet', 'errorconf/' + detectedLang], function(utils, builtinValidator, ErrorSetFactory, errConf){
+window.ZValidator = function(){
 	var validatorMethodFactory = builtinValidator.factory,
-		defaultValidator = utils.extend(builtinValidator.basic, builtinValidator.advance);
+		defaultValidator = utils.extend(builtinValidator.basic, builtinValidator.advance),
+        errConf = ErrorConfig.getConfByLang();
 
 	return {
         /**
@@ -127,4 +125,4 @@ define(['utils', '../builtinvalidator/builtinvalidator', 'errorSet', 'errorconf/
             return validity;
         }
     };
-});
+}();

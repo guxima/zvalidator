@@ -7,7 +7,6 @@ z-validator
 2. 验证器可以配置依赖项
 3. 错误提示可以配置，支持国际化多语言
 4. 可以实例化多个验证器，支持不同粒度的业务
-5. 采用模块化载入方式
 
 
 使用方法
@@ -27,6 +26,24 @@ data-validator：指定验证器，和对应的验证器参数
 
 - data-validator="['validatorA',['validatorB', vbParam1, vbParam2], 'validatorC', ...]"
 - data-validator="{'validatorA' : '', 'validatorB' : [2, 10], ...}"
+
+html代码示例：
+
+    <form id="regInfo" onsubmit="return false">
+        <ul>
+            <li><label>姓名：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
+            <li><label>年龄5-10：</label><input type="number" name="age" data-validator="{'rangeLimit':[5,10]}"/></li>
+            <li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="['cellphoneNo']"/></li>
+            <li><label>身份证：</label><input type="text" name="idcard" data-validator="['IDCardNo']"/></li>
+            <li><label for="hobit">选择一个爱好：</label><select id="hobit" name="hobit" data-validator="{'lengthFixed':2}">
+                <option value="无">无</option>
+                <option value="吃饭">吃饭</option>
+                <option value="睡觉">睡觉</option>
+                <option value="打豆豆">打豆豆</option>
+            </select></li>
+            <li><input type="submit" value="submit"/></li>
+        </ul>
+    </form>
 
 
 ###后端校验

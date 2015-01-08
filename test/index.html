@@ -1,27 +1,61 @@
 <!DOCTYPE HTML>
 <html>
- <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
-  <title> q-validator 应用实例 </title>
-  <meta name="Description" content="z-validator的应用实例">
- </head>
+<head>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+	<title>z-validator 开发测试 </title>
+	<meta name="Description" content="z-validator的应用实例">
+	<script type="text/javascript" src="../src/utils.js"></script>
+	<script type="text/javascript" src="../src/errorset_factory.js"></script>
 
- <body>
-    <form id="regInfo" onsubmit="return false">
-		<ul>
-			<li><label>姓名：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
-			<li><label>年龄：</label><input type="number" name="age" data-validator="['numOnly']"/></li>
-			<li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="['cellphoneNo']"/></li>
-			<li><label>身份证：</label><input type="text" name="idcard" data-validator="['IDCardNo']"/></li>
-			<li><label>选择一个爱好：</label><select name="hobit" data-validator="{'lengthFixed':2}">
-				<option value="无">无</option>
-				<option value="吃饭">吃饭</option>
-				<option value="睡觉">睡觉</option>
-				<option value="打豆豆">打豆豆</option>
-			</select></li>
-			<li><input type="submit" value="submit"/> </li>
-		</ul>
-    </form>
-    <script type="text/javascript" data-main="main" src="lib/require.js"></script>
- </body>
+	<script type="text/javascript" src="../src/builtinvalidator/basic_validator.js"></script>
+	<script type="text/javascript" src="../src/builtinvalidator/advanced_validator.js"></script>
+	<script type="text/javascript" src="../src/builtinvalidator/builtin_validator.js"></script>
+
+	<script type="text/javascript" src="../src/errorconf/error_config.js"></script>
+	<script type="text/javascript" src="../src/errorconf/zh-cn.js"></script>
+	<script type="text/javascript" src="../src/errorconf/en-us.js"></script>
+
+	<script type="text/javascript" src="../src/validator_factory.js"></script>
+</head>
+
+<body>
+<form id="regInfo" onsubmit="return false">
+	<ul>
+		<li><label>姓名：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
+		<li><label>年龄5-10：</label><input type="number" name="age" data-validator="{'rangeLimit':[5,10]}"/></li>
+		<li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="['cellphoneNo']"/></li>
+		<li><label>身份证：</label><input type="text" name="idcard" data-validator="['IDCardNo']"/></li>
+		<li><label for="hobit">选择一个爱好：</label><select id="hobit" name="hobit" data-validator="{'lengthFixed':2}">
+			<option value="无">无</option>
+			<option value="吃饭">吃饭</option>
+			<option value="睡觉">睡觉</option>
+			<option value="打豆豆">打豆豆</option>
+		</select></li>
+		<li><input type="submit" value="submit"/></li>
+	</ul>
+</form>
+<script type="text/javascript" src="lib/jquery-1.11.0.min.js"></script>
+<script>
+	$('#regInfo').on('submit', function(e){
+		var isValid = ZValidator.create().traverseContainer('regInfo');
+		/**
+		 * traverseContainer()返回验证结果
+		 * 验证通过时返回 true
+		 * 不通过时返回
+		 * Object{
+         *     code: "CELLPHONENO_INVALID",//结果标识码
+         *     invalidElement: inputElement,//未通过验证的元素节点
+         *     msg: "手机号不符合要求",//自定义返回信息
+         *     validatorName: "cellphoneNo"//当前的验证方法
+         * }
+		 */
+		if(isValid !== true){
+			isValid.invalidElement.focus();
+			alert(isValid.msg)
+		}else{
+			alert('good')
+		}
+	});
+</script>
+</body>
 </html>
