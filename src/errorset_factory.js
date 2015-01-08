@@ -1,11 +1,10 @@
 /**
  * Desc: 处理返回的错误码，保持在FormValidator的原型上，用户可以自定义扩展它
  * User: guxima@gmail.com
- * Date: 2014/6/12
+ * Date: 2015/1/8
  */
-'use strict';
 
-define(function(){
+var ErrorSetFactory = function(){
 	//用errorSet对象的guid为键值存储自定义错误配置
 	var errorMsg = {};
 
@@ -43,4 +42,4 @@ define(function(){
 			return (errorMsg[this.guid] && errorMsg[this.guid][errCode]);
 		}
     };
-});
+}();

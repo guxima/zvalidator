@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+  <title> q-validator 应用实例 </title>
+  <meta name="Description" content="z-validator的应用实例">
+ </head>
+
+ <body>
+    <form id="regInfo" onsubmit="return false">
+		<ul>
+			<li><label>姓名：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
+			<li><label>年龄：</label><input type="number" name="age" data-validator="['numOnly']"/></li>
+			<li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="['cellphoneNo']"/></li>
+			<li><label>身份证：</label><input type="text" name="idcard" data-validator="['IDCardNo']"/></li>
+			<li><label>选择一个爱好：</label><select name="hobit" data-validator="{'lengthFixed':2}">
+				<option value="无">无</option>
+				<option value="吃饭">吃饭</option>
+				<option value="睡觉">睡觉</option>
+				<option value="打豆豆">打豆豆</option>
+			</select></li>
+			<li><input type="submit" value="submit"/> </li>
+		</ul>
+    </form>
+    <script type="text/javascript" data-main="main" src="lib/require.js"></script>
+ </body>
+</html>

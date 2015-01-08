@@ -1,11 +1,5 @@
-/**
- * Desc: 内置的验证器集合
- * User: guxima@gmail.com
- * Date: 2014/6/12
- */
-'use strict';
-
-define(['utils', './basicValidator', './advancedValidator'], function(utils, basicValidator, advancedValidator){
+//把所有和验证器方法封装在一起，builtinValidator提供对内置验证方法的统一调用
+var builtinValidator = function(basicValidator, advancedValidator){
 	/**
      * 提供一种机制实现验证器之间的依赖，用于自定义验证器的时候调用基础验证器
      * @type {{create: Function, depend: Function, decorate: Function}}
@@ -102,4 +96,4 @@ define(['utils', './basicValidator', './advancedValidator'], function(utils, bas
 		basic: basicValidator,
 		advance: advancedValidator
 	};
-});
+}(basicValidator, advancedValidator);
