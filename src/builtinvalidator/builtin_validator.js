@@ -23,13 +23,11 @@ var builtinValidator = function(basicValidator, advancedValidator){
          * @param validatorList {Array} 依赖的验证器名称和可选值列表，csv分割可以传多个
          */
         depend: function(validatorList){
-			if(utils.isArray(validatorList) && validatorList.length>0){
-				var length = validatorList.length;
+            var length = validatorList.length;
 
-				while(length--){
-					this.depValidatorQueue.unshift(validatorList[length]);
-				}
-			}
+            while(length--){
+                this.depValidatorQueue.unshift(validatorList[length]);
+            }
         },
         /**
          * 自定义验证的装饰方法
@@ -75,7 +73,7 @@ var builtinValidator = function(basicValidator, advancedValidator){
 			return function(constrName, config){
 				this.constrName = constrName;
 				//处理构造器依赖项
-				this.depend(config.deps);
+                utils.isArray(config.deps) && config.deps.length>0 && this.depend(config.deps);
 
 				if(this.check=config.check){
 					return function(){

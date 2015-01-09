@@ -28,14 +28,17 @@
 </form>
 
 <script>
-	$('#regInfo').on('submit', function (e) {
-		var isValid = ZValidator.create().traverseContainer('regInfo');
-		if (isValid !== true) {
-			isValid.invalidElement.focus();
-			alert(isValid.msg)
-		} else {
-			alert('good')
-		}
+	$('#regInfo').on('submit', function(e){
+		ZValidator.create({
+			onValid: function(){
+				alert('good')
+			},
+			onInvalid: function(invalid){
+				invalid.element.focus();
+				alert(invalid.msg)
+			}
+		}).traverseContainer('regInfo');
+
 	});
 </script>
 </body>

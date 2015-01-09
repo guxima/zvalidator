@@ -1,9 +1,8 @@
-/*! 2015-01-08 | (c) 2014, 2015 guxima@gmail.com*/
+/*! 2015-01-09 | (c) 2014, 2015 guxima@gmail.com */
 !(function(){
 'use strict';
 /**
  * Desc: 自定义方法工具
- * User: guxima@gmail.com
  * Date: 2015/1/8
  */
 var utils = {
@@ -74,7 +73,6 @@ utils.each(['Object', 'Array', 'Number', 'String', 'Boolean', 'Null', 'Undefined
 }, utils);
 /**
  * Desc: 处理返回的错误码，保持在FormValidator的原型上，用户可以自定义扩展它
- * User: guxima@gmail.com
  * Date: 2015/1/8
  */
 
@@ -236,13 +234,11 @@ var builtinValidator = function(basicValidator, advancedValidator){
          * @param validatorList {Array} 依赖的验证器名称和可选值列表，csv分割可以传多个
          */
         depend: function(validatorList){
-			if(utils.isArray(validatorList) && validatorList.length>0){
-				var length = validatorList.length;
+            var length = validatorList.length;
 
-				while(length--){
-					this.depValidatorQueue.unshift(validatorList[length]);
-				}
-			}
+            while(length--){
+                this.depValidatorQueue.unshift(validatorList[length]);
+            }
         },
         /**
          * 自定义验证的装饰方法
@@ -288,7 +284,7 @@ var builtinValidator = function(basicValidator, advancedValidator){
 			return function(constrName, config){
 				this.constrName = constrName;
 				//处理构造器依赖项
-				this.depend(config.deps);
+                utils.isArray(config.deps) && config.deps.length>0 && this.depend(config.deps);
 
 				if(this.check=config.check){
 					return function(){
@@ -364,9 +360,8 @@ ErrorConfig.setLangConf('en-us', {
 
 /**
  * Desc: 通用的表单验证类库
- * version: 2.0.0
- * User: guxima@gmail.com
- * Date: 2015/1/8
+ * version: 2.0.1
+ * Date: 2015/1/9
  */
 
 window.ZValidator = function(){
@@ -377,11 +372,16 @@ window.ZValidator = function(){
 	return {
         /**
          * 验证器对象的构造接口，可以通过传入键值对来扩展验证方法
-         * @param customValidator {Object} 自定义的验证方法集合{customValidatorName: {},...}
+         * @param opt {Object} 自定义的验证方法集合及自定义回调,，忽略其它类型参数
+         *                      {
+         *                          onValid: function(){},
+         *                          onInvalid: function(){},
+         *                          customValidatorName: {},...
+         *                      }
          * @returns {FormValidator} {Object} 验证器实例
          */
-        create: function(customValidator){
-            customValidator = customValidator || {};
+        create: function(opt){
+            opt = opt || {};
 
             var FormValidator = function(){};
 
@@ -391,10 +391,21 @@ window.ZValidator = function(){
                 validator = anInstance.validator||(anInstance.validator={});
 
 			anInstance.errorSet = ErrorSetFactory.create(errConf);
-            for(var k in customValidator){
-                if(customValidator.hasOwnProperty(k)){
+
+            if(opt.onValid){
+                anInstance.onValid = opt.onValid;
+                delete opt.onValid;
+            }
+            if(opt.onInvalid){
+                anInstance.onInvalid = opt.onInvalid;
+                delete opt.onInvalid;
+            }
+
+            for(var k in opt){
+                //含有check方法的都认为是自定义的验证器
+                if(opt.hasOwnProperty(k) && typeof opt[k].check==='function'){
 					var vm = validatorMethodFactory.create();
-                    validator[k] = utils.bind(vm.decorate(k, customValidator[k]), vm);
+                    validator[k] = utils.bind(vm.decorate(k, opt[k]), vm);
                 }
             }
 
@@ -476,7 +487,7 @@ window.ZValidator = function(){
                                 code: code,
                                 msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)),
                                 validatorName: validatorName,
-                                invalidElement: ele//保存未通过验证的元素，提供debug信息
+                                element: ele//保存未通过验证的元素，提供debug信息
                             };
 
                             return false;
@@ -486,8 +497,9 @@ window.ZValidator = function(){
                     return validity===true;
                 });
 
-            return validity;
+            //版本兼容，回调不返回结果时，默认返回校验结果
+            return validity===true ? (this.onValid && this.onValid()) : (this.onInvalid && this.onInvalid(validity)) || validity;
         }
     };
 }();
-})()
+})();

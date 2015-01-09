@@ -1,6 +1,5 @@
 /**
  * Desc: 处理返回的错误码，保持在FormValidator的原型上，用户可以自定义扩展它
- * User: guxima@gmail.com
  * Date: 2015/1/8
  */
 

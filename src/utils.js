@@ -1,6 +1,5 @@
 /**
  * Desc: 自定义方法工具
- * User: guxima@gmail.com
  * Date: 2015/1/8
  */
 var utils = {
