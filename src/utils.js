@@ -25,16 +25,19 @@ var utils = {
     $: function(any){
         return this.type(any) === 'string' ? document.getElementById(any) : any;
     },
-    getChildByTagName: function(ele, tag){
+    getChildByTagName: function(ele, tag, filter){
         var all = [],
             tmp;
+
+        //filter默认为真
+        filter = filter || function(){return 1;};
 
         this.type(tag) !== 'array' && (tag=[tag]);
         for(var i= 0, len=tag.length; i<len;){
             tmp = ele.getElementsByTagName(tag[i++]);
             if(tmp.length>0){
                 for (var k=0, ken=tmp.length; k<ken; k++){
-                    all.push(tmp[k]);
+                    filter(tmp[k]) && all.push(tmp[k]);
                 }
             }
         }

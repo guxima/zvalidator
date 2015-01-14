@@ -91,7 +91,9 @@ window.ZValidator = function(){
                 validity = true,
                 me = this,
                 nameAttr = 'validator',
-                fields = utils.getChildByTagName(selector, ['input', 'select', 'textarea']);
+                fields = utils.getChildByTagName(selector, ['input', 'select', 'textarea'], function(child){
+                                                                                                   return ! (child.readOnly || child.disabled);//使用getAttribute在chrome下不返回值
+                                                                                                });
 
             utils.each(utils.arrayFilter(fields, function(v){
                 return !! utils.getDataset(v, nameAttr);

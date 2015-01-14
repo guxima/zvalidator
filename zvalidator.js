@@ -1,4 +1,4 @@
-/*! 2015-01-09 | (c) 2014, 2015 guxima@gmail.com */
+/*! 2015-01-14 | (c) 2014, 2015 guxima@gmail.com */
 !(function(){
 'use strict';
 /**
@@ -28,16 +28,19 @@ var utils = {
     $: function(any){
         return this.type(any) === 'string' ? document.getElementById(any) : any;
     },
-    getChildByTagName: function(ele, tag){
+    getChildByTagName: function(ele, tag, filter){
         var all = [],
             tmp;
+
+        //filter默认为真
+        filter = filter || function(){return 1;};
 
         this.type(tag) !== 'array' && (tag=[tag]);
         for(var i= 0, len=tag.length; i<len;){
             tmp = ele.getElementsByTagName(tag[i++]);
             if(tmp.length>0){
                 for (var k=0, ken=tmp.length; k<ken; k++){
-                    all.push(tmp[k]);
+                    filter(tmp[k]) && all.push(tmp[k]);
                 }
             }
         }
@@ -474,7 +477,9 @@ window.ZValidator = function(){
                 validity = true,
                 me = this,
                 nameAttr = 'validator',
-                fields = utils.getChildByTagName(selector, ['input', 'select', 'textarea']);
+                fields = utils.getChildByTagName(selector, ['input', 'select', 'textarea'], function(child){
+                                                                                                   return ! (child.readOnly || child.disabled);//使用getAttribute在chrome下不返回值
+                                                                                                });
 
             utils.each(utils.arrayFilter(fields, function(v){
                 return !! utils.getDataset(v, nameAttr);
