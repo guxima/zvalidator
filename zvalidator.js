@@ -120,48 +120,58 @@ var ErrorSetFactory = function(){
 }();
 
 //默认提供的基础验证器，通过原型链的方式被用户调用和扩展
-//特别需要注意的是验证器的返回值可选，不返回值或者返回true被认为通过验证；返回其它值被当作错误码从errorSet中获取详细信息
+//特别需要注意的是验证器的返回值将被当作错误码从errorSet中获取详细信息，不返回值代表通过验证
 var basicValidator = {
     required: function (value) {
-        return !utils.isEmpty(value) ? true : 'REQUIRED';
+        if(utils.isEmpty(value) ){
+            return 'REQUIRED';
+        }
     },
     numOnly: function (value) {
-        return (/^[0-9]+$/).test(value) ? true : 'NUM_ONLY';
+        if(! (/^[0-9]+$/).test(value) ){
+            return 'NUM_ONLY';
+        }
     },
     //实际返回length值的检测情况
     lengthFixed: function (value, opt) {
-        return !utils.isEmpty(value) && value.length === +opt ? true : 'LENGTH_FIXED';
+        if(utils.isEmpty(value) || value.length !== +opt){
+            return 'LENGTH_FIXED';
+        }
     },
     cnCharacterOnly: function (value) {
-        return (/^[\u4E00-\u9FA5]+$/).test(value) ? true : 'CN_CHARACTER_ONLY';
+        if(! (/^[\u4E00-\u9FA5]+$/).test(value) ){
+            return 'CN_CHARACTER_ONLY';
+        }
     },
     lengthLimit: function (value, opt) {
-        var ret = true;
-
-        if (!utils.isEmpty(value) && utils.isArray(opt) && opt.length > 0) {
-            if (!utils.isUndefined(opt[0])) {
-                ret = value.length >= opt[0] ? true : 'LENGTH_LIMIT_MIN';
+        if (!utils.isEmpty(value) && utils.isArray(opt) && opt.length === 2) {
+            if (!utils.isUndefined(opt[0]) && value.length < opt[0]) {
+                return 'LENGTH_LIMIT_MIN';
             }
-            if (ret === true && !utils.isUndefined(opt[1])) {
-                ret = value.length <= opt[1] ? true : 'LENGTH_LIMIT_MAX';
+            if (!utils.isUndefined(opt[1]) && value.length > opt[1]) {
+                return 'LENGTH_LIMIT_MAX';
             }
         } else {
-            ret = 'LENGTH_LIMIT_UNKNOWN';
+            return 'LENGTH_LIMIT_UNKNOWN';
         }
-
-        return ret;
     },
     //IPV4
     ip: function (v, opt) {
-        return !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v) && 'IPV4_INVALID';
+        if(!/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v) ){
+            return 'IPV4_INVALID';
+        }
     },
     //email
     email: function(v){
-        return !(/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/i).test(v) && 'EMAIL_INVALID';
+        if(!(/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/i).test(v) ){
+            return 'EMAIL_INVALID';
+        }
     },
     //url
     url: function(v){
-        return !(/^(https?):\/\/[^\s&<>#;,"\'\?]+(|#[^\s<>;"\']*|\?[^\s<>;"\']*)$/i).test(v) && 'URL_INVALID';
+        if(!(/^(https?):\/\/[^\s&<>#;,"\'\?]+(|#[^\s<>;"\']*|\?[^\s<>;"\']*)$/i).test(v)){
+            return 'URL_INVALID';
+        }
     }
 };
 /**
@@ -174,17 +184,13 @@ var advancedValidator = {
         deps: ['numOnly'],
         check: function(value, opt){
             if(utils.isArray(opt) && opt.length===2){
-                var ret = true;
-
                 value = parseInt(value, 10) || 0;
-                if(utils.type(opt[0]) !== 'undefined'){
-                    ret = value>=parseInt(opt[0], 10) ? true : 'RANGE_LIMIT_MIN';
+                if(utils.type(opt[0]) !== 'undefined' && value < parseInt(opt[0], 10)){
+                    return 'RANGE_LIMIT_MIN';
                 }
-                if(ret===true && utils.type(opt[1]) !== 'undefined'){
-                    ret = value<=parseInt(opt[1], 10) ? true : 'RANGE_LIMIT_MAX';
+                if(utils.type(opt[1]) !== 'undefined' && value > parseInt(opt[1], 10)){
+                    return 'RANGE_LIMIT_MAX';
                 }
-
-                return ret;
             }
         }
     },
@@ -192,17 +198,17 @@ var advancedValidator = {
     cellphoneNo: {
         deps: ['numOnly', ['lengthFixed', 11] ],
         check: function(value){
-            return (/^1[0-9]{10}$/).test(value) ? true : 'CELLPHONENO_INVALID';
+            if(!(/^1[0-9]{10}$/).test(value) ){
+                return 'CELLPHONENO_INVALID';
+            }
         }
     },
     //身份证号
     IDCardNo: {
         deps: [['lengthFixed', 18]],
         check: function(value){
-            var ret = true;
-
             if (! (/^\d{17}[\dX]$/ig).test(value)){
-                ret = 'IDCARDNO_UNEXPECT_CHAR';
+                return 'IDCARDNO_UNEXPECT_CHAR';
             }else{
                 //按照ISO7064:1983.MOD 11-2校验码计算出来的校验码
                 var factors = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2],
@@ -218,14 +224,12 @@ var advancedValidator = {
                     sum='X';
                 }
 
-                if(sum != value.slice(-1).toUpperCase()){
-                    ret = 'IDCARDNO_INVALID';
+                if(sum.toString() !== value.slice(-1).toUpperCase()){
+                    return 'IDCARDNO_INVALID';
                 }
             }
-
-            return ret;
         }
-    },
+    }
 
 
 };
@@ -270,7 +274,7 @@ var builtinValidator = function(basicValidator, advancedValidator){
          */
         decorate: (function(){
 			function decorateValidate(value, option){
-				var code = true;
+                var code;
 
 				utils.each(this.depValidatorQueue, function(idx, item){
 					var validatorName = item,
@@ -281,24 +285,21 @@ var builtinValidator = function(basicValidator, advancedValidator){
 						validatorOpt = item.slice(1);
 					}
 
-					var args = validatorOpt.length === 0 ? [validatorName, value] : [validatorName, value].concat(validatorOpt);
 					var validator = advancedValidator[validatorName] || basicValidator[validatorName];
 
-					code = validator ? validator(value, validatorOpt) : true;
+					code = validator && validator(value, validatorOpt);
 
-					if(utils.type(code)!=='undefined' && code!==true){
+					if(code){
 						return false;//退出队列循环
 					}
 				}, this);
 
-				//通过了依赖项验证后进行constructor检验
-				if(utils.type(code)==='undefined' || code===true){
-					code = this.check(value, option);
+				//通过了依赖项验证后要进行自定义check检验
+				if(code){
+                    return this.constrName + '_' + code;
 				}else{
-					code = this.constrName + '_' + code;
+                    return this.check(value, option);
 				}
-
-				return code;
 			}
 
 			return function(constrName, config){
@@ -487,6 +488,7 @@ window.ZValidator = function(){
                     var validatorMap = {},
 						dataset = utils.getDataset(ele, nameAttr);
 
+                    //检测属性值是否可以被正确解析
 					try{
 						validatorMap = new Function('return ' + dataset)();
 					}
@@ -509,7 +511,7 @@ window.ZValidator = function(){
 
                         var code = me.applyValidator(validatorName, utils.trim(utils.$(ele).value), validatorOpt);
 
-                        if(code && code!==true){
+                        if(code){
                             code = code.toUpperCase();//统一大写输出
                             validity = {
                                 code: code,

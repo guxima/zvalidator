@@ -39,7 +39,7 @@ var builtinValidator = function(basicValidator, advancedValidator){
          */
         decorate: (function(){
 			function decorateValidate(value, option){
-				var code = true;
+                var code;
 
 				utils.each(this.depValidatorQueue, function(idx, item){
 					var validatorName = item,
@@ -50,24 +50,21 @@ var builtinValidator = function(basicValidator, advancedValidator){
 						validatorOpt = item.slice(1);
 					}
 
-					var args = validatorOpt.length === 0 ? [validatorName, value] : [validatorName, value].concat(validatorOpt);
 					var validator = advancedValidator[validatorName] || basicValidator[validatorName];
 
-					code = validator ? validator(value, validatorOpt) : true;
+					code = validator && validator(value, validatorOpt);
 
-					if(utils.type(code)!=='undefined' && code!==true){
+					if(code){
 						return false;//退出队列循环
 					}
 				}, this);
 
-				//通过了依赖项验证后进行constructor检验
-				if(utils.type(code)==='undefined' || code===true){
-					code = this.check(value, option);
+				//通过了依赖项验证后要进行自定义check检验
+				if(code){
+                    return this.constrName + '_' + code;
 				}else{
-					code = this.constrName + '_' + code;
+                    return this.check(value, option);
 				}
-
-				return code;
 			}
 
 			return function(constrName, config){

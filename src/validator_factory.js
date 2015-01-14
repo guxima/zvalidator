@@ -101,6 +101,7 @@ window.ZValidator = function(){
                     var validatorMap = {},
 						dataset = utils.getDataset(ele, nameAttr);
 
+                    //检测属性值是否可以被正确解析
 					try{
 						validatorMap = new Function('return ' + dataset)();
 					}
@@ -123,7 +124,7 @@ window.ZValidator = function(){
 
                         var code = me.applyValidator(validatorName, utils.trim(utils.$(ele).value), validatorOpt);
 
-                        if(code && code!==true){
+                        if(code){
                             code = code.toUpperCase();//统一大写输出
                             validity = {
                                 code: code,
