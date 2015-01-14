@@ -125,7 +125,7 @@ window.ZValidator = function(){
                             code = code.toUpperCase();//统一大写输出
                             validity = {
                                 code: code,
-                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)),
+                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)) || me.errorSet.getErrMsg('UNKNOWN'),
                                 validatorName: validatorName,
                                 element: ele//保存未通过验证的元素，提供debug信息
                             };

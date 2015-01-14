@@ -3,6 +3,7 @@
  * 需要注意的是各个函数内可选调用this.depend方法，但是必须有this.check属性定义验证方法，check接收两个参数：value-被验证表单域的值，opt-可选的通过表单域属性data-validatorvalue传递的值。check方法返回值规则同验证器;
  */
 var advancedValidator = {
+    //数值范围限制，[min, max]
     rangeLimit: {
         deps: ['numOnly'],
         check: function(value, opt){
@@ -21,12 +22,14 @@ var advancedValidator = {
             }
         }
     },
+    //手机号码
     cellphoneNo: {
         deps: ['numOnly', ['lengthFixed', 11] ],
         check: function(value){
             return (/^1[0-9]{10}$/).test(value) ? true : 'CELLPHONENO_INVALID';
         }
     },
+    //身份证号
     IDCardNo: {
         deps: [['lengthFixed', 18]],
         check: function(value){
@@ -56,5 +59,7 @@ var advancedValidator = {
 
             return ret;
         }
-    }
+    },
+
+
 };

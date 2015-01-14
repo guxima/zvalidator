@@ -118,35 +118,47 @@ var ErrorSetFactory = function(){
 
 //默认提供的基础验证器，通过原型链的方式被用户调用和扩展
 //特别需要注意的是验证器的返回值可选，不返回值或者返回true被认为通过验证；返回其它值被当作错误码从errorSet中获取详细信息
- var basicValidator = {
-    required: function(value){
-        return ! utils.isEmpty(value) ? true : 'REQUIRED';
+var basicValidator = {
+    required: function (value) {
+        return !utils.isEmpty(value) ? true : 'REQUIRED';
     },
-    numOnly: function(value){
+    numOnly: function (value) {
         return (/^[0-9]+$/).test(value) ? true : 'NUM_ONLY';
     },
     //实际返回length值的检测情况
-    lengthFixed: function(value, opt){
-        return ! utils.isEmpty(value) && value.length === +opt ? true : 'LENGTH_FIXED';
+    lengthFixed: function (value, opt) {
+        return !utils.isEmpty(value) && value.length === +opt ? true : 'LENGTH_FIXED';
     },
-    cnCharacterOnly: function(value){
-        return (/^[\u4E00-\u9FA5]+$/).test(value) ?  true : 'CN_CHARACTER_ONLY';
+    cnCharacterOnly: function (value) {
+        return (/^[\u4E00-\u9FA5]+$/).test(value) ? true : 'CN_CHARACTER_ONLY';
     },
-    lengthLimit: function(value, opt){
+    lengthLimit: function (value, opt) {
         var ret = true;
 
-        if(! utils.isEmpty(value) && utils.isArray(opt) && opt.length>0){
-            if(! utils.isUndefined(opt[0])){
-                ret = value.length>=opt[0] ? true : 'LENGTH_LIMIT_MIN';
+        if (!utils.isEmpty(value) && utils.isArray(opt) && opt.length > 0) {
+            if (!utils.isUndefined(opt[0])) {
+                ret = value.length >= opt[0] ? true : 'LENGTH_LIMIT_MIN';
             }
-            if(ret===true && ! utils.isUndefined(opt[1])){
-                ret = value.length<=opt[1] ? true : 'LENGTH_LIMIT_MAX';
+            if (ret === true && !utils.isUndefined(opt[1])) {
+                ret = value.length <= opt[1] ? true : 'LENGTH_LIMIT_MAX';
             }
-        }else{
+        } else {
             ret = 'LENGTH_LIMIT_UNKNOWN';
         }
 
         return ret;
+    },
+    //IPV4
+    ip: function (v, opt) {
+        return !/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(v) && 'IPV4_INVALID';
+    },
+    //email
+    email: function(v){
+        return !(/^[_a-zA-Z0-9-]+(\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,3})$/i).test(v) && 'EMAIL_INVALID';
+    },
+    //url
+    url: function(v){
+        return !(/^(https?):\/\/[^\s&<>#;,"\'\?]+(|#[^\s<>;"\']*|\?[^\s<>;"\']*)$/i).test(v) && 'URL_INVALID';
     }
 };
 /**
@@ -154,6 +166,7 @@ var ErrorSetFactory = function(){
  * 需要注意的是各个函数内可选调用this.depend方法，但是必须有this.check属性定义验证方法，check接收两个参数：value-被验证表单域的值，opt-可选的通过表单域属性data-validatorvalue传递的值。check方法返回值规则同验证器;
  */
 var advancedValidator = {
+    //数值范围限制，[min, max]
     rangeLimit: {
         deps: ['numOnly'],
         check: function(value, opt){
@@ -172,12 +185,14 @@ var advancedValidator = {
             }
         }
     },
+    //手机号码
     cellphoneNo: {
         deps: ['numOnly', ['lengthFixed', 11] ],
         check: function(value){
             return (/^1[0-9]{10}$/).test(value) ? true : 'CELLPHONENO_INVALID';
         }
     },
+    //身份证号
     IDCardNo: {
         deps: [['lengthFixed', 18]],
         check: function(value){
@@ -207,7 +222,9 @@ var advancedValidator = {
 
             return ret;
         }
-    }
+    },
+
+
 };
 /**
  * 把所有和验证器方法封装在一起，builtinValidator提供对内置验证方法的统一调用
@@ -340,7 +357,10 @@ ErrorConfig.setLangConf('zh-cn', {
     RANGE_LIMIT_MAX: '值大于最大限制',
     CELLPHONENO_INVALID: '手机号不符合要求',
     IDCARDNO_UNEXPECT_CHAR: '身份证号码中有不能识别的字符',
-    IDCARDNO_INVALID: '身份证信息错误'
+    IDCARDNO_INVALID: '身份证信息错误',
+    IPV4_INVALID: 'IP格式错误',
+    EMAIL_INVALID: '邮件格式错误',
+    URL_INVALID: 'url格式错误'
 });
 
 ErrorConfig.setLangConf('en-us', {
@@ -355,7 +375,10 @@ ErrorConfig.setLangConf('en-us', {
     RANGE_LIMIT_MAX: '值大于最大限制',
     CELLPHONENO_INVALID: '手机号不符合要求',
     IDCARDNO_UNEXPECT_CHAR: '身份证号码中有不能识别的字符',
-    IDCARDNO_INVALID: '身份证信息错误'
+    IDCARDNO_INVALID: '身份证信息错误',
+    IPV4_INVALID: 'IP格式不对',
+    EMAIL_INVALID: '邮件格式错误',
+    URL_INVALID: 'url格式错误'
 });
 
 /**
@@ -485,7 +508,7 @@ window.ZValidator = function(){
                             code = code.toUpperCase();//统一大写输出
                             validity = {
                                 code: code,
-                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)),
+                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)) || me.errorSet.getErrMsg('UNKNOWN'),
                                 validatorName: validatorName,
                                 element: ele//保存未通过验证的元素，提供debug信息
                             };
