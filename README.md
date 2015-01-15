@@ -7,6 +7,7 @@ z-validator
 2. 验证器可以配置依赖的其它验证器，最大化复用验证方法
 3. 错误提示可以配置，支持国际化多语言
 4. 可以实例化多个验证器，支持不同粒度的校验业务
+5. 支持给表单项添加 optional 属性，标识为选填项
 
 
 前端使用方法
@@ -32,16 +33,20 @@ html代码示例：
 
     <form id="regInfo" onsubmit="return false">
     	<ul>
-    		<li><label>姓名（2-10个汉字）：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
-    		<li><label>年龄（5-10）：</label><input type="number" name="age" data-validator="{'rangeLimit':[5,10]}"/></li>
+    		<li><label>姓名：</label><input type="text" name="name" data-validator="['cnCharacterOnly',['lengthLimit', 2, 10]]"/></li>
+    		<li><label>年龄5-10：</label><input type="number" name="age" data-validator="{'rangeLimit':[5,10]}"/></li>
     		<li><label for="cellphoneno">手机号：</label><input id="cellphoneno" type="number" name="cellphoneNo" data-validator="['cellphoneNo']"/></li>
     		<li><label>身份证：</label><input type="text" name="idcard" data-validator="['IDCardNo']"/></li>
-    		<li><label>选择一个爱好（两字）：</label><select name="hobit" data-validator="{'lengthFixed':2}">
+    		<li><label for="hobit">选择一个爱好：</label><select id="hobit" name="hobit" data-validator="{'lengthFixed':2}">
     			<option value="无">无</option>
     			<option value="吃饭">吃饭</option>
     			<option value="睡觉">睡觉</option>
     			<option value="打豆豆">打豆豆</option>
     		</select></li>
+    		<li><label>IP：</label><input type="text" name="ip" data-validator="['ip']" readonly  value="只读表单项不检测"/></li>
+    		<li><label>email：</label><input type="text" name="email" data-validator="['email']" disabled value="不可用表单项不检测"/></li>
+    		<li><label>url：</label><input type="text" name="url" data-validator="['url']"/></li>
+    		<li><label>选填的url：</label><input type="text" name="url" data-validator="['url']" optional/></li>
     		<li><input type="submit" value="submit"/></li>
     	</ul>
     </form>

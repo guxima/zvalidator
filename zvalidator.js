@@ -1,4 +1,4 @@
-/*! 2015-01-14 | (c) 2014, 2015 guxima@gmail.com */
+/*! 2015-01-15 | (c) 2014, 2015 guxima@gmail.com */
 !(function(){
 'use strict';
 /**
@@ -479,7 +479,7 @@ window.ZValidator = function(){
                 me = this,
                 nameAttr = 'validator',
                 fields = utils.getChildByTagName(selector, ['input', 'select', 'textarea'], function(child){
-                                                                                                   return ! (child.readOnly || child.disabled);//使用getAttribute在chrome下不返回值
+                                                                                                   return ! (child.hasAttribute('readonly') || child.hasAttribute('disabled') );//使用getAttribute在chrome下不返回值
                                                                                                 });
 
             utils.each(utils.arrayFilter(fields, function(v){
@@ -496,33 +496,47 @@ window.ZValidator = function(){
 						throw('invalid data-validator values => ' + dataset);
 					}
 
-					//validatorMap支持两种形式：[validatora, [validatorb, param1, param2...]] or {validatora:'', validatorb:[param1, param2]}
-                    utils.each(validatorMap, function(idx, item){
-						var validatorName = item,
-							validatorOpt;
-
-						if(utils.isObject(validatorMap)){
-							validatorName = idx;
-							validatorOpt = item;
-						}else if(utils.isArray(item)){
-							validatorName = item[0];
-							validatorOpt = item.slice(1);
-						}
-
-                        var code = me.applyValidator(validatorName, utils.trim(utils.$(ele).value), validatorOpt);
-
-                        if(code){
-                            code = code.toUpperCase();//统一大写输出
+                    //对设定了验证方法的表单元素进行非空校验，标识为 notrequired 的元素跳过
+                    if(utils.isEmpty(ele.value) ){
+                        if(!ele.hasAttribute('optional')){
+                            var requiredCode = me.applyValidator('required', utils.trim(ele.value));
                             validity = {
-                                code: code,
-                                msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)) || me.errorSet.getErrMsg('UNKNOWN'),
-                                validatorName: validatorName,
-                                element: ele//保存未通过验证的元素，提供debug信息
+                                code: requiredCode,
+                                msg: me.errorSet.getErrMsg(requiredCode),
+                                validatorName: 'required',
+                                element: ele
                             };
-
-                            return false;
                         }
-                    });
+
+                    }else{
+                        //validatorMap支持两种形式：[validatora, [validatorb, param1, param2...]] or {validatora:'', validatorb:[param1, param2]}
+                        utils.each(validatorMap, function(idx, item){
+                            var validatorName = item,
+                                validatorOpt;
+
+                            if(utils.isObject(validatorMap)){
+                                validatorName = idx;
+                                validatorOpt = item;
+                            }else if(utils.isArray(item)){
+                                validatorName = item[0];
+                                validatorOpt = item.slice(1);
+                            }
+
+                            var code = me.applyValidator(validatorName, utils.trim(ele.value), validatorOpt);
+
+                            if(code){
+                                code = code.toUpperCase();//统一大写输出
+                                validity = {
+                                    code: code,
+                                    msg: me.errorSet.getErrMsg(code) || me.errorSet.getErrMsg(code.slice(code.indexOf('_')+1)) || me.errorSet.getErrMsg('UNKNOWN'),
+                                    validatorName: validatorName,
+                                    element: ele//保存未通过验证的元素，提供debug信息
+                                };
+
+                                return false;
+                            }
+                        });
+                    }
 
                     return validity===true;
                 });

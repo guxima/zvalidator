@@ -21,9 +21,10 @@
 			<option value="睡觉">睡觉</option>
 			<option value="打豆豆">打豆豆</option>
 		</select></li>
-		<li><label>IP：</label><input type="text" name="ip" data-validator="['ip']" readonly value="只读表单项不检测"/></li>
+		<li><label>IP：</label><input type="text" name="ip" data-validator="['ip']" readonly  value="只读表单项不检测"/></li>
 		<li><label>email：</label><input type="text" name="email" data-validator="['email']" disabled value="不可用表单项不检测"/></li>
 		<li><label>url：</label><input type="text" name="url" data-validator="['url']"/></li>
+		<li><label>选填的url：</label><input type="text" name="url" data-validator="['url']" optional/></li>
 		<li><input type="submit" value="submit"/></li>
 	</ul>
 </form>
