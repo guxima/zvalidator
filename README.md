@@ -48,57 +48,57 @@ html代码示例：
 
 内置验证器列表
 --------------
-required
+**required**
 
-- 必填项
+- 必填项，空格不能通过校验
 
-numOnly
+**numOnly**
 
-- 只能为数字
+- 只能为整型数字
 
-lengthFixed
+**lengthFixed**
 
-- 固定长度
+- 字符串长度固定
 
 - 参数类型：Int，默认为0
 
-cnCharacterOnly
+**cnCharacterOnly**
 
 - 只能为汉字
 
-lengthLimit
+**lengthLimit**
 
-- 长度限制
+- 字符串长度限制
 
-- 参数类型：Array，[minLength, maxLength]
+- 参数类型：Array，[minLength, maxLength] 如[3, 8]表示 3<= 字符串长度 <=8
 
-ip
+**ip**
 
-- IPV4
+- IPV4，如 114.114.114.114
 
-email
+**email**
 
-- Email
+- Email，如 hi@domain.suffix
 
-url
+**url**
 
-- URL
+- URL, 如 http://www.github.com or https://www.github.com
 
-rangeLimit
+**rangeLimit**
 
 - 数值范围
 
-- 参数类型：Array，[minValue, maxValue]
+- 参数类型：Array，[minValue, maxValue] 如[5, 10]表示 5<= 数值 <= 10
 
-cellphoneNo
+**cellphoneNo**
 
 - 手机号（“1”开头的11位数字）
 
-IDCardNo
+**IDCardNo**
 
 - 身份证号
 
-验证器扩展
+自定义验证器
 ----------
 
 载入 ZValidator 脚本文件后参考如下代码：
@@ -112,20 +112,20 @@ IDCardNo
             * 验证方法
             * @param {String} value 表单域的值
             * @param {String} opt 传递的自定义参数值
-            * @return {Mix} code 明确的布尔值 true 或未通过校验标识码，若没有返回值则该验证始终通过
+            * @return {Mix} 所有返回值都表示未通过校验，并作为错误标识码从语言文件中读取提示信息
+                            没有返回值该验证通过
             */
             check = function(value, opt){
-                var code = true;
                 .....
-                code = 'VALIDATE_CODE';
-                ....
-                return code;
+                if(true){
+                    return 'VALIDATE_CODE';
+                }
             }
         }
     });
 
 问题反馈
 --------
-使用建议和问题反馈请加入QQ群：254271610
+使用建议和问题反馈请加入QQ群： **254271610**
 
 
