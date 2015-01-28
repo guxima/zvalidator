@@ -1,6 +1,6 @@
 /**
- * 把所有和验证器方法封装在一起，builtinValidator提供对内置验证方法的统一调用
- */
+ *把所有和验证器方法封装在一起，builtinValidator提供对内置验证方法的统一调用
+**/
 var builtinValidator = function(basicValidator, advancedValidator){
 	/**
      * 提供一种机制实现验证器之间的依赖，用于自定义验证器的时候调用基础验证器

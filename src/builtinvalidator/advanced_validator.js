@@ -1,7 +1,7 @@
 /**
- * 预定义一组实现了依赖功能的高级验证器构造函数
- * 需要注意的是各个函数内可选调用this.depend方法，但是必须有this.check属性定义验证方法，check接收两个参数：value-被验证表单域的值，opt-可选的通过表单域属性data-validatorvalue传递的值。check方法返回值规则同验证器;
- */
+ *预定义一组实现了依赖功能的高级验证器构造函数
+ *需要注意的是各个函数内可选调用this.depend方法，但是必须有this.check属性定义验证方法，check接收两个参数：value-被验证表单域的值，opt-可选的通过表单域属性data-validatorvalue传递的值。check方法返回值规则同验证器;
+**/
 var advancedValidator = {
     //数值范围限制，[min, max]
     rangeLimit: {
@@ -54,6 +54,4 @@ var advancedValidator = {
             }
         }
     }
-
-
 };

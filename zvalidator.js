@@ -1,4 +1,4 @@
-/*! 2015-01-15 | (c) 2014, 2015 guxima@gmail.com */
+/*! 2015-01-28 | (c) 2014, 2015 guxima@gmail.com */
 !(function(){
 'use strict';
 /**
@@ -119,8 +119,10 @@ var ErrorSetFactory = function(){
     };
 }();
 
-//默认提供的基础验证器，通过原型链的方式被用户调用和扩展
-//特别需要注意的是验证器的返回值将被当作错误码从errorSet中获取详细信息，不返回值代表通过验证
+/**
+默认提供的基础验证器，通过原型链的方式被用户调用和扩展
+特别需要注意的是验证器的返回值将被当作错误码从errorSet中获取详细信息，不返回值代表通过验证
+**/
 var basicValidator = {
     required: function (value) {
         if(utils.isEmpty(value) ){
@@ -175,9 +177,9 @@ var basicValidator = {
     }
 };
 /**
- * 预定义一组实现了依赖功能的高级验证器构造函数
- * 需要注意的是各个函数内可选调用this.depend方法，但是必须有this.check属性定义验证方法，check接收两个参数：value-被验证表单域的值，opt-可选的通过表单域属性data-validatorvalue传递的值。check方法返回值规则同验证器;
- */
+ *预定义一组实现了依赖功能的高级验证器构造函数
+ *需要注意的是各个函数内可选调用this.depend方法，但是必须有this.check属性定义验证方法，check接收两个参数：value-被验证表单域的值，opt-可选的通过表单域属性data-validatorvalue传递的值。check方法返回值规则同验证器;
+**/
 var advancedValidator = {
     //数值范围限制，[min, max]
     rangeLimit: {
@@ -230,12 +232,10 @@ var advancedValidator = {
             }
         }
     }
-
-
 };
 /**
- * 把所有和验证器方法封装在一起，builtinValidator提供对内置验证方法的统一调用
- */
+ *把所有和验证器方法封装在一起，builtinValidator提供对内置验证方法的统一调用
+**/
 var builtinValidator = function(basicValidator, advancedValidator){
 	/**
      * 提供一种机制实现验证器之间的依赖，用于自定义验证器的时候调用基础验证器
@@ -329,7 +329,6 @@ var builtinValidator = function(basicValidator, advancedValidator){
 		advance: advancedValidator
 	};
 }(basicValidator, advancedValidator);
-
 /**
  * 校验失败信息的提示bootstrap
  * 载入所有的语言文件到内存中，根据浏览器ua的语言标识确定使用哪个配置
